@@ -95,9 +95,10 @@ class RuntimeHWConfig:
         driver = self.get_local_driver_binaryname()
         runtimeconf = self.get_local_runtimeconf_binaryname()
 
-        driverArgs = """+permissive $(sed \':a;N;$!ba;s/\\n/ /g\' {runtimeconf}) +macaddr0={macaddr} +slotid={slotid} +niclog0=niclog {tracefile} +trace-start0={trace_start} +trace-end0={trace_end} +linklatency0={linklatency} +netbw0={netbw} +profile-interval={profile_interval} +zero-out-dram +shmemportname0={shmemportname} +permissive-off +prog0={bootbin}""".format(
+        driverArgs = """+permissive $(sed \':a;N;$!ba;s/\\n/ /g\' {runtimeconf}) +macaddr0={macaddr} +slotid={slotid} +niclog0=niclog {tracefile} +trace-start0={trace_start} +trace-end0={trace_end} +linklatency0={linklatency} +netbw0={netbw} +profile-interval={profile_interval} {command_zero} +shmemportname0={shmemportname} +permissive-off +prog0={bootbin}""".format(
                 slotid=slotid, runtimeconf=runtimeconf, macaddr=macaddr,
                 linklatency=linklatency, netbw=netbw,
+                command_zero="", # was "+zero-out-dram"
                 profile_interval=profile_interval, shmemportname=shmemportname,
                 bootbin=bootbin, tracefile=tracefile, trace_start=trace_start,
                 trace_end=trace_end)
@@ -146,8 +147,9 @@ class RuntimeHWConfig:
         command_bootbinaries = array_to_plusargs(all_bootbinaries, "+prog")
 
 
-        basecommand = """screen -S fsim{slotid} -d -m bash -c "script -f -c 'stty intr ^] && sudo ./{driver} +permissive $(sed \':a;N;$!ba;s/\\n/ /g\' {runtimeconf}) +slotid={slotid} +profile-interval={profile_interval} +zero-out-dram {command_macs} {command_rootfses} +niclog0=niclog {tracefile} +trace-start0={trace_start} +trace-end0={trace_end} {command_linklatencies} {command_netbws}  {command_shmemportnames} +permissive-off {command_bootbinaries} && stty intr ^c' uartlog"; sleep 1""".format(
+        basecommand = """screen -S fsim{slotid} -d -m bash -c "script -f -c 'stty intr ^] && sudo ./{driver} +permissive $(sed \':a;N;$!ba;s/\\n/ /g\' {runtimeconf}) +slotid={slotid} +profile-interval={profile_interval} {command-zero} {command_macs} {command_rootfses} +niclog0=niclog {tracefile} +trace-start0={trace_start} +trace-end0={trace_end} {command_linklatencies} {command_netbws}  {command_shmemportnames} +permissive-off {command_bootbinaries} && stty intr ^c' uartlog"; sleep 1""".format(
             slotid=slotid, driver=driver, runtimeconf=runtimeconf,
+            command_zero="", # was zero-out-dram
             command_macs=command_macs,
             command_rootfses=command_rootfses,
             command_linklatencies=command_linklatencies,
