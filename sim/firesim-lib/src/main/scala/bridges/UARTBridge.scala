@@ -18,9 +18,18 @@ class UARTBridge(implicit p: Parameters) extends BlackBox
     with Bridge[HostPortIO[UARTBridgeTargetIO], UARTBridgeModule] {
   val io = IO(new UARTBridgeTargetIO)
   val bridgeIO = HostPort(io)
+/* The previosu code here for baudrate (32 * 115200)
+   seems to assume a 3.2 ghz core cpu sim clock 
   val frequency = p(PeripheryBusKey).frequency
   val baudrate = 3686400L
   val div = (p(PeripheryBusKey).frequency / baudrate).toInt
+ */
+/* earlier versions for Aloe/FSDK used this..
+    val baudrate = 115200 * frequency/100000000
+    val div = (p(PeripheryBusKey).frequency / baudrate).toInt
+ */
+  /* assume a 100mhz clock from someplace?? (It works, no idea why) */
+  val div = 100000000 / 115200
   val constructorArg = Some(UARTKey(div))
   generateAnnotations()
 }
