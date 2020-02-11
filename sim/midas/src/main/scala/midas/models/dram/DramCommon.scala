@@ -15,10 +15,10 @@ import scala.io.Source
 
 
 trait HasDRAMMASConstants {
-  val maxDRAMTimingBits = 7 // width of a DRAM timing
-  val tREFIWidth = 14       // Refresh interval. Suffices up to tCK = ~0.5ns (for 64ms, 8192 refresh commands)
-  val tREFIBits = 14       // Refresh interval. Suffices up to tCK = ~0.5ns (for 64ms, 8192 refresh commands)
-  val tRFCBits = 10
+  val maxDRAMTimingBits = 8 // width of a DRAM timing
+  val tREFIWidth = 15       // Refresh interval. Suffices up to tCK = ~0.5ns (for 64ms, 8192 refresh commands)
+  val tREFIBits = 15       // Refresh interval. Suffices up to tCK = ~0.5ns (for 64ms, 8192 refresh commands)
+  val tRFCBits = 11
   val numBankStates = 2
   val numRankStates = 2
 }
